@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"fmt"
 	"julianmindria/backendCoffee/config"
 	"julianmindria/backendCoffee/internal/models"
 	"julianmindria/backendCoffee/internal/repositories"
 	"julianmindria/backendCoffee/pkg"
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,13 +21,23 @@ func NewUser(r *repositories.RepoUser) *HandlerUser {
 
 func (h *HandlerUser) Postdata(ctx *gin.Context) {
 	var err error
-	var user models.User
+	user := models.User{
+		Role: "user",
+	}
 	if err := ctx.ShouldBind(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
-	user.User_image = ctx.MustGet("image").(string)
-	fmt.Println(ctx.MustGet("image").(string))
+
+	_, err = govalidator.ValidateStruct(&user)
+	if err != nil {
+		pkg.NewRes(401, &config.Result{
+			Data: err.Error(),
+		}).Send(ctx)
+		return
+	}
+
+	user.Image_file = ctx.MustGet("image").(string)
 	user.Pass, err = pkg.HashPassword(user.Pass)
 	if err != nil {
 		pkg.NewRes(401, &config.Result{
@@ -52,6 +62,7 @@ func (h *HandlerUser) Updatedata(ctx *gin.Context) {
 		return
 	}
 
+	user.Image_file = ctx.MustGet("image").(string)
 	response, er := h.UpdateUser(&user)
 	if er != nil {
 		ctx.AbortWithError(http.StatusBadRequest, er)

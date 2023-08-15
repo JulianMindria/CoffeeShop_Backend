@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"julianmindria/backendCoffee/internal/models"
 	"julianmindria/backendCoffee/internal/repositories"
 	"net/http"
@@ -24,6 +25,8 @@ func (h *HandlerProduct) Postdata(ctx *gin.Context) {
 		return
 	}
 
+	product.Image_file = ctx.MustGet("image").(string)
+	fmt.Println(product)
 	response, er := h.Createproduct(&product)
 	if er != nil {
 		ctx.AbortWithError(http.StatusBadRequest, er)

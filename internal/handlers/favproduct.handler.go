@@ -17,7 +17,7 @@ func NewFav(r *repositories.RepoFav) *Handlerfav {
 }
 
 func (h *Handlerfav) Addfavorite(ctx *gin.Context) {
-	var favorite models.Fav_Product
+	var favorite models.Order_Product
 	if err := ctx.ShouldBind(&favorite); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return

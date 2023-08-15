@@ -20,7 +20,7 @@ type Result struct {
 	Message interface{}
 }
 
-var CorsConfig = cors.Config{
+var Config = cors.Config{
 	AllowOrigins:     []string{"*"},
 	AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "HEAD", "OPTIONS"},
 	AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},

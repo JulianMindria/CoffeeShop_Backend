@@ -14,7 +14,7 @@ func NewFav(db *sqlx.DB) *RepoFav {
 	return &RepoFav{db}
 }
 
-func (r RepoFav) Create_favproduct(data *models.Fav_Product) (string, error) {
+func (r RepoFav) Create_favproduct(data *models.Order_Product) (string, error) {
 	queryproduct := `INSERT INTO favorite_products(
 		id_user,
 		id_product  

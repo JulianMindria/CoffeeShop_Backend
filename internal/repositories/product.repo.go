@@ -30,14 +30,18 @@ func (r RepoProduct) Createproduct(data *models.Product) (string, error) {
 		description, 
 		stock,         
 		price,         
-		product_image
+		image_file,
+		categories,
+		isfavorite
 		) 
 		VALUES(
 			:product_name, 
 			:description, 
 			:stock, 
 			:price,
-			:product_image
+			:image_file,
+			:categories,
+			:isfavorite
 		)`
 
 	_, err := r.NamedExec(queryproduct, data)
@@ -50,7 +54,7 @@ func (r RepoProduct) Createproduct(data *models.Product) (string, error) {
 
 func (r RepoProduct) Updateproduct(data *models.Product) (string, error) {
 	queryproduct := `UPDATE public.products
-	SET product_name=:product_name, description=:description, stock=:stock, price=:price
+	SET product_name=:product_name, description=:description, stock=:stock, price=:price, image_file=:image_file, categories=:categories, isfavorite=:isfavorite
 	WHERE id_product=:id_product
 	`
 	_, err := r.NamedExec(queryproduct, data)

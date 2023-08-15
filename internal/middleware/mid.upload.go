@@ -8,7 +8,7 @@ import (
 )
 
 func UploadFile(ctx *gin.Context) {
-	file, err := ctx.FormFile("user_image")
+	file, err := ctx.FormFile("image_file")
 	if err != nil {
 		if err.Error() == "http: no such file" {
 			ctx.Set("image", "")

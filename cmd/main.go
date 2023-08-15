@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	router := routers.New(database)
+	router := routers.NewRoute(database)
 	server := pkg.Server(router)
 
 	if err := server.ListenAndServe(); err != nil {

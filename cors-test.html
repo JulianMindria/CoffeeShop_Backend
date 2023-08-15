@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CORS Test</title>
+</head>
+<body>
+  <h1>CORS Test</h1>
+  <button onclick="sendRequest()">Send Request</button>
+  <div id="response"></div>
+
+  <script>
+    // request using script
+    // localhost:5500
+    // localhost:8081
+    function sendRequest() {
+      const url = 'http://localhost:8081/product/';
+      fetch(url)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('response').innerText = data;
+        })
+        .catch(error => {
+          document.getElementById('response').innerText = 'Error: ' + error.message;
+        });
+    }
+  </script>
+</body>
+</html>

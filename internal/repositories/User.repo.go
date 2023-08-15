@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 	"julianmindria/backendCoffee/internal/models"
 
 	"github.com/jmoiron/sqlx"
@@ -22,7 +23,7 @@ func (r RepoUser) CreateUser(data *models.User) (string, error) {
 		pass,
 		phone,
 		roles,
-		user_image
+		image_file
 		) 
 		VALUES(
 			:username, 
@@ -30,7 +31,7 @@ func (r RepoUser) CreateUser(data *models.User) (string, error) {
 			:pass, 
 			:phone,
 			:roles,
-			:user_image
+			:image_file
 		)`
 
 	_, err := r.NamedExec(queryUser, data)
@@ -41,11 +42,15 @@ func (r RepoUser) CreateUser(data *models.User) (string, error) {
 }
 
 func (r RepoUser) UpdateUser(data *models.User) (string, error) {
-	queryUser := `UPDATE public.users
-	SET username=:username,email=:email,pass=:pass,phone=:phone
+	queryUser := `UPDATE public.users SET
+	username = COALESCE(NULLIF(:username, ''), username), 
+	email = COALESCE(NULLIF(:email, ''), email),
+	phone = COALESCE(NULLIF(:phone, ''), phone),
+	image_file = COALESCE(NULLIF(:image_file, ''), image_file)
 	WHERE id_user=:id_user
 	`
 	_, err := r.NamedExec(queryUser, data)
+	fmt.Println(r.NamedExec(queryUser, data))
 	if err != nil {
 		return "", err
 	}
