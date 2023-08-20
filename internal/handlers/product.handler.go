@@ -70,7 +70,6 @@ func (h *HandlerProduct) Deletedata(ctx *gin.Context) {
 
 func (h *HandlerProduct) Getdata(ctx *gin.Context) {
 	var product models.Product
-
 	search := ctx.Query("search")
 	orderby := ctx.Query("orderby")
 	page, _ := strconv.Atoi(ctx.Query("page"))

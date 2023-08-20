@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"fmt"
+	"julianmindria/backendCoffee/config"
 	"julianmindria/backendCoffee/internal/models"
 
 	"github.com/jmoiron/sqlx"
@@ -24,7 +25,7 @@ func NewProduct(db *sqlx.DB) *RepoProduct {
 	return &RepoProduct{db}
 }
 
-func (r RepoProduct) Createproduct(data *models.Product) (string, error) {
+func (r RepoProduct) Createproduct(data *models.Product) (*config.Result, error) {
 	queryproduct := `INSERT INTO products(
 		product_name,  
 		description, 
@@ -46,32 +47,32 @@ func (r RepoProduct) Createproduct(data *models.Product) (string, error) {
 
 	_, err := r.NamedExec(queryproduct, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data product created", nil
+	return &config.Result{Message: "1 product user created"}, nil
 
 }
 
-func (r RepoProduct) Updateproduct(data *models.Product) (string, error) {
+func (r RepoProduct) Updateproduct(data *models.Product) (*config.Result, error) {
 	queryproduct := `UPDATE public.products
 	SET product_name=:product_name, description=:description, stock=:stock, price=:price, image_file=:image_file, categories=:categories, isfavorite=:isfavorite
 	WHERE id_product=:id_product
 	`
 	_, err := r.NamedExec(queryproduct, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data Updated", nil
+	return &config.Result{Message: "1 product user updated"}, nil
 
 }
 
-func (r RepoProduct) Deleteproduct(data *models.Product) (string, error) {
+func (r RepoProduct) Deleteproduct(data *models.Product) (*config.Result, error) {
 	queryproduct := `DELETE FROM public.products WHERE id_product=:id_product`
 	_, err := r.NamedExec(queryproduct, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data Deleted", nil
+	return &config.Result{Message: "1 product user deleted"}, nil
 
 }
 

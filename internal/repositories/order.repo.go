@@ -1,23 +1,24 @@
 package repositories
 
 import (
+	"julianmindria/backendCoffee/config"
 	"julianmindria/backendCoffee/internal/models"
 
 	"github.com/jmoiron/sqlx"
 )
 
-type RepoFav struct {
+type RepoOrder struct {
 	*sqlx.DB
 }
 
-func NewFav(db *sqlx.DB) *RepoFav {
-	return &RepoFav{db}
+func NewFav(db *sqlx.DB) *RepoOrder {
+	return &RepoOrder{db}
 }
 
-func (r RepoFav) Create_favproduct(data *models.Order_Product) (string, error) {
-	queryproduct := `INSERT INTO favorite_products(
+func (r RepoOrder) Add_Order_product(data *models.Order_Product) (*config.Result, error) {
+	queryproduct := `INSERT INTO order_products(
 		id_user,
-		id_product  
+		id_product 
 		) 
 		VALUES(
 			:id_user, 
@@ -26,8 +27,17 @@ func (r RepoFav) Create_favproduct(data *models.Order_Product) (string, error) {
 
 	_, err := r.NamedExec(queryproduct, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 favorite product Added", nil
+	return &config.Result{Message: "1 Order created"}, nil
+}
 
+func (r RepoOrder) Delete_Order_product(data *models.Order_Product) (*config.Result, error) {
+	queryproduct := `DELETE FROM public.order_products WHERE order_id=:order_id`
+
+	_, err := r.NamedExec(queryproduct, data)
+	if err != nil {
+		return nil, err
+	}
+	return &config.Result{Message: "1 Order deleted"}, nil
 }

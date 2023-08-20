@@ -15,8 +15,8 @@ type Metas struct {
 }
 
 type Result struct {
-	Data    interface{}
-	Meta    interface{}
+	Data    interface{} `json:"data,omitempty"`
+	Meta    interface{} `json:"meta,omitempty"`
 	Message interface{}
 }
 

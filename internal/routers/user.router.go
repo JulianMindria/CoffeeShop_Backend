@@ -15,8 +15,8 @@ func User(g *gin.Engine, d *sqlx.DB) {
 	repo := repositories.NewUser(d)
 	handler := handlers.NewUser(repo)
 
-	route.POST("/", middleware.UploadFile, middleware.AuthJwt("user"), handler.Postdata)
+	route.POST("/", middleware.UploadFile, handler.Postdata)
 	route.GET("/", middleware.AuthJwt("user"), handler.Getdata)
-	route.PUT("/", middleware.UploadFile, middleware.AuthJwt("admin"), handler.Updatedata)
+	route.PUT("/:username", middleware.UploadFile, middleware.AuthJwt("admin"), handler.Updatedata)
 	route.DELETE("/", middleware.AuthJwt("admin"), handler.Deletedata)
 }

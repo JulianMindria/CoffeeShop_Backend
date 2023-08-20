@@ -2,6 +2,7 @@ package routers
 
 import (
 	"julianmindria/backendCoffee/internal/handlers"
+	"julianmindria/backendCoffee/internal/middleware"
 	"julianmindria/backendCoffee/internal/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -16,9 +17,9 @@ func Product(g *gin.Engine, d *sqlx.DB) {
 	otherRepo := repositories.NewFav(d)
 	otherhandler := handlers.NewFav(otherRepo)
 
-	route.POST("/", handler.Postdata)
-	route.POST("/favorite", otherhandler.Addfavorite)
+	route.POST("/", middleware.UploadFile, handler.Postdata)
+	route.POST("/order", otherhandler.AddOrder)
 	route.GET("/", handler.Getdata)
-	route.PUT("/", handler.Updatedata)
+	route.PUT("/", middleware.UploadFile, handler.Updatedata)
 	route.DELETE("/", handler.Deletedata)
 }

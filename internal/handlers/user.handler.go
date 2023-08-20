@@ -57,6 +57,7 @@ func (h *HandlerUser) Postdata(ctx *gin.Context) {
 
 func (h *HandlerUser) Updatedata(ctx *gin.Context) {
 	var user models.User
+	user.Username = ctx.Param("username")
 	if err := ctx.ShouldBind(&user); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return

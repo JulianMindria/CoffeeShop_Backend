@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"fmt"
+	"julianmindria/backendCoffee/config"
 	"julianmindria/backendCoffee/internal/models"
 
 	"github.com/jmoiron/sqlx"
@@ -16,7 +17,7 @@ func NewUser(db *sqlx.DB) *RepoUser {
 	return &RepoUser{db}
 }
 
-func (r RepoUser) CreateUser(data *models.User) (string, error) {
+func (r RepoUser) CreateUser(data *models.User) (*config.Result, error) {
 	queryUser := `INSERT INTO users(
 		username,
 		email,
@@ -36,35 +37,34 @@ func (r RepoUser) CreateUser(data *models.User) (string, error) {
 
 	_, err := r.NamedExec(queryUser, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data user created", nil
+	return &config.Result{Message: "1 data user created"}, nil
 }
 
-func (r RepoUser) UpdateUser(data *models.User) (string, error) {
+func (r RepoUser) UpdateUser(data *models.User) (*config.Result, error) {
 	queryUser := `UPDATE public.users SET
-	username = COALESCE(NULLIF(:username, ''), username), 
 	email = COALESCE(NULLIF(:email, ''), email),
 	phone = COALESCE(NULLIF(:phone, ''), phone),
 	image_file = COALESCE(NULLIF(:image_file, ''), image_file)
-	WHERE id_user=:id_user
+	WHERE username=:username
 	`
 	_, err := r.NamedExec(queryUser, data)
 	fmt.Println(r.NamedExec(queryUser, data))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data Updated", nil
+	return &config.Result{Message: "1 data user updated"}, nil
 
 }
 
-func (r RepoUser) DeleteUser(data *models.User) (string, error) {
+func (r RepoUser) DeleteUser(data *models.User) (*config.Result, error) {
 	queryUser := `DELETE FROM public.users WHERE id_user=:id_user`
 	_, err := r.NamedExec(queryUser, data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return "1 data Deleted", nil
+	return &config.Result{Message: "1 data user Deleted"}, nil
 
 }
 
