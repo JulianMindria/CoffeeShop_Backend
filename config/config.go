@@ -17,7 +17,7 @@ type Metas struct {
 type Result struct {
 	Data    interface{} `json:"data,omitempty"`
 	Meta    interface{} `json:"meta,omitempty"`
-	Message interface{}
+	Message interface{} `json:"message,omitempty"`
 }
 
 var Config = cors.Config{

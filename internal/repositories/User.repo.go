@@ -9,6 +9,14 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type RepoUserIF interface {
+	CreateUser(data *models.User) (*config.Result, error)
+	UpdateUser(data *models.User) (*config.Result, error)
+	DeleteUser(data *models.User) (*config.Result, error)
+	Get_Users(data *models.User, search string) ([]models.User, error)
+	GetAuthUser(user string) (*models.User, error)
+}
+
 type RepoUser struct {
 	*sqlx.DB
 }

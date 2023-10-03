@@ -1,65 +1,36 @@
 package pkg
 
 import (
-	"fmt"
-	"net/smtp"
+	"log"
+	"os"
 
-	"github.com/jordan-wright/email"
+	"gopkg.in/gomail.v2"
 )
 
-const (
-	smtpAuthAddress   = "smtp.gmail.com"
-	smtpServerAddress = "smtp.gmail.com:587"
-)
+const CONFIG_SMTP_HOST = "smtp.gmail.com"
+const CONFIG_SMTP_PORT = 587
 
-type Emailsender interface {
-	SendEmail(
-		subject string,
-		content string,
-		to []string,
-		cc []string,
-		bcc []string,
-		attachFiles []string,
-	) error
-}
+func SendMail(email string, token string) {
+	CONFIG_AUTH_EMAIL := os.Getenv("CONFIG_AUTH_EMAIL")
+	CONFIG_AUTH_PASSWORD := os.Getenv("CONFIG_AUTH_PASSWORD")
 
-type Gmailsender struct {
-	name              string
-	fromEmailaddress  string
-	fromEmailpassword string
-}
-
-func NewGmailsender(name string, fromEmailaddress string, fromEmailpassword string) Emailsender {
-	return &Gmailsender{
-		name:              name,
-		fromEmailaddress:  fromEmailaddress,
-		fromEmailpassword: fromEmailpassword,
-	}
-}
-
-func (sender *Gmailsender) SendEmail(
-	subject string,
-	content string,
-	to []string,
-	cc []string,
-	bcc []string,
-	attachFiles []string,
-) error {
-	e := email.NewEmail()
-	e.From = fmt.Sprintf("%s <%s>", sender.name, sender.fromEmailaddress)
-	e.Subject = subject
-	e.HTML = []byte(content)
-	e.To = to
-	e.Cc = cc
-	e.Bcc = bcc
-
-	for _, f := range attachFiles {
-		_, err := e.AttachFile(f)
-		if err != nil {
-			return fmt.Errorf("failed to attach file %s: %w", f, err)
-		}
+	mailer := gomail.NewMessage()
+	mailer.SetHeader("From", "Online Coffee Shop <zwallet6@gmail.com>")
+	mailer.SetHeader("To", email)
+	mailer.SetAddressHeader("Cc", "zwallet6@gmail.com", "Tra Lala La")
+	mailer.SetHeader("Subject", "Activation Account")
+	mailer.SetBody("text/html", "Open this link to activate your account : localhost:8080/auth/"+token)
+	dialer := gomail.NewDialer(
+		CONFIG_SMTP_HOST,
+		CONFIG_SMTP_PORT,
+		CONFIG_AUTH_EMAIL,
+		CONFIG_AUTH_PASSWORD,
+	)
+	err := dialer.DialAndSend(mailer)
+	if err != nil {
+		log.Println(err.Error())
 	}
 
-	smtpAuth := smtp.PlainAuth("", sender.fromEmailaddress, sender.fromEmailpassword, smtpAuthAddress)
-	return e.Send(smtpServerAddress, smtpAuth)
+	log.Println("Mail sent")
+	return
 }

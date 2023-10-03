@@ -12,10 +12,10 @@ import (
 )
 
 type HandlerUser struct {
-	*repositories.RepoUser
+	repositories.RepoUserIF
 }
 
-func NewUser(r *repositories.RepoUser) *HandlerUser {
+func NewUser(r repositories.RepoUserIF) *HandlerUser {
 	return &HandlerUser{r}
 }
 
@@ -37,7 +37,7 @@ func (h *HandlerUser) Postdata(ctx *gin.Context) {
 		return
 	}
 
-	user.Image_file = ctx.MustGet("image").(string)
+	user.Image_file = ctx.GetString("image")
 	user.Pass, err = pkg.HashPassword(user.Pass)
 	if err != nil {
 		pkg.NewRes(401, &config.Result{
@@ -63,7 +63,7 @@ func (h *HandlerUser) Updatedata(ctx *gin.Context) {
 		return
 	}
 
-	user.Image_file = ctx.MustGet("image").(string)
+	user.Image_file = ctx.GetString("image")
 	response, er := h.UpdateUser(&user)
 	if er != nil {
 		ctx.AbortWithError(http.StatusBadRequest, er)

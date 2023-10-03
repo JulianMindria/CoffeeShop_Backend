@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  backendgo:
+    container_name: gotest
+    image: julianmindria/goapps
+    ports:
+      - '8082:8081'
+    networks:
+      - pgnet
+    environment:
+      - DB_HOST='coffee-dev'
+networks:
+  pgnet:
+    external: true

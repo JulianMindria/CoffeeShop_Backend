@@ -1,7 +1,7 @@
 APP=goback
 BUILD="./build/$(APP)"
 DB_DRIVER=postgres
-DB_SOURCE="postgresql://kopisop:12345678@localhost/kopidb?sslmode=disable&search_path=public"
+DB_SOURCE="postgresql://postgres:12345678@localhost/postgres?sslmode=disable&search_path=public"
 MIGRATIONS_DIR=./migrations
 
 
